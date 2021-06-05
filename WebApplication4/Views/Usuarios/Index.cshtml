@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication4.Models.UsuariosViewModel>
+﻿@model IEnumerable<WebApplication4.Models.Usuario>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,18 +9,21 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<h6>Tenemos la cantidad de @ViewBag.cantidadObj elementos (ViewBag)</h6>
+<h6>Tenemos la cantidad de @ViewData["cantidad"] elementos (ViewData)</h6>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Usuario)
+                @Html.DisplayNameFor(model => model.Usuario1)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Rol)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Correo)
             </th>
@@ -31,14 +34,14 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Usuario)
+                @Html.DisplayFor(modelItem => item.Usuario1)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Rol)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Correo)
             </td>

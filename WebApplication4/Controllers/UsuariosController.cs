@@ -4,46 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication4.Database;
+using WebApplication4.Interfaces;
 using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
     public class UsuariosController : Controller
     {
-        static List<UsuariosViewModel> usuarios = new List<UsuariosViewModel>() {
-         new UsuariosViewModel()
-            {
-                Correo = "daniel.zamora@psg.uni.edu.ni",
-                Nombre = "Daniel",
-                Rol = "Administrador",
-                Usuario = "dfzamora"
-            },
-
-       new UsuariosViewModel()
+        List<Usuario> usuarios;
+        IUsuarios _user;
+        public UsuariosController(IUsuarios user)
         {
-            Correo = "jdoe@psg.uni.edu.ni",
-                Nombre = "John",
-                Rol = "Administrador",
-                Usuario = "john"
-            },
-
-        new UsuariosViewModel()
-        {
-            Correo = "test@psg.uni.edu.ni",
-                Nombre = "Test",
-                Rol = "Analista",
-                Usuario = "test"
-            }
-        };
-
-        public UsuariosController()
-        {
-
+            _user=user;
         }
+
         // GET: UsuariosController
         public ActionResult Index()
         {
-           
+            usuarios = _user.GetUsuarios();
+            ViewBag.cantidadObj = usuarios.Count();
+            ViewData["cantidad"] = usuarios.Count();
             return View(usuarios);
         }
 
@@ -66,7 +47,7 @@ namespace WebApplication4.Controllers
         {
             try
             {
-                usuarios.Add(user);
+                //usuarios.Add(user);
                 return RedirectToAction(nameof(Index));
             }
             catch
