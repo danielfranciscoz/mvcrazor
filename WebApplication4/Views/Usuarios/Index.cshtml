@@ -4,26 +4,24 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Usuarios</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Crear">Crear</a>
 </p>
-
-<h6>Tenemos la cantidad de @ViewBag.cantidadObj elementos (ViewBag)</h6>
-<h6>Tenemos la cantidad de @ViewData["cantidad"] elementos (ViewData)</h6>
+<h6>Existen @ViewBag.cantidad elementos (Viewbag) </h6>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Id
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Usuario1)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Rol)
-            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Correo)
             </th>
@@ -31,26 +29,28 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (Usuario item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(a => item.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Usuario1)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Rol)
-            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Correo)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-action="Editar" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Detalle" asp-route-id="@item.Id">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<h6>Existen @ViewData["cantidadVD"] elementos (ViewData)</h6>

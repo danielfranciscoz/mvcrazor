@@ -3,36 +3,34 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using WebApplication4.Models;
 
-#nullable disable
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
 
 namespace WebApplication4.Database
 {
-    public partial class testdbContext : DbContext
+    public partial class mydatabaseDB : DbContext
     {
-        public testdbContext()
+        public mydatabaseDB()
         {
         }
 
-        public testdbContext(DbContextOptions<testdbContext> options)
+        public mydatabaseDB(DbContextOptions<mydatabaseDB> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
-
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasKey(e => e.IdUsuario);
-
                 entity.Property(e => e.Correo)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -45,9 +43,9 @@ namespace WebApplication4.Database
 
                 entity.Property(e => e.Usuario1)
                     .IsRequired()
+                    .HasColumnName("Usuario")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Usuario");
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

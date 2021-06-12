@@ -38,3 +38,20 @@ Para agregar los servicios mediante inyección de dependencia
 ```sh
 services.AddScoped<IInterfaceName, ClassName>();
 ```
+
+## Validaciones con DataAnnotations
+
+Para validar los datos enviados desde el cliente, es posible utilizar Etiquetas en los campos de nuestro modelo, podremos validar escenarios como: Requerido, Tamaño Minimo o Maximo, Correo, Patrones, Etc.
+```sh
+[Required]
+[EmailFormatValid]
+[MaxLength(value)]
+[MinLength(value)]
+[Range(minValue, maxValue, ErrorMessage = "Here goes your error message")]
+```
+
+Tambien podemos personalizar los mensajes de error con:
+
+```sh
+[Required(ErrorMessage="Mensaje Personalizado")]
+```

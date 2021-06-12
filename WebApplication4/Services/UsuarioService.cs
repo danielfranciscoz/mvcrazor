@@ -10,19 +10,19 @@ namespace WebApplication4.Services
 {
     public class UsuarioService : IUsuarios
     {
-        testdbContext _db;
-        public UsuarioService(testdbContext db)
+        mydatabaseDB _db;
+        public UsuarioService(mydatabaseDB db)
         {
             _db = db;
         }
-        public void EditarUsuario(int idUsuario, Usuario usuario)
+        public void EditarUsuario(int idUsuario, UsuarioDTO usuario)
         {
             throw new NotImplementedException();
         }
 
         public List<Usuario> GetUsuarios()
         {
-            return _db.Usuarios.ToList();
+            return _db.Usuario.ToList();
         }
 
         public void GuardarUsuario()

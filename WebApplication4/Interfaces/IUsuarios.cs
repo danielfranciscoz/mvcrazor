@@ -10,6 +10,6 @@ namespace WebApplication4.Interfaces
     {
         List<Usuario> GetUsuarios();
         void GuardarUsuario();
-        void EditarUsuario(int idUsuario, Usuario usuario);
+        void EditarUsuario(int idUsuario, UsuarioDTO usuario);
     }
 }

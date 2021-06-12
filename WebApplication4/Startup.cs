@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebApplication4.Database;
-using WebApplication4.Interfaces;
 using WebApplication4.Services;
+using WebApplication4.Interfaces;
 
 namespace WebApplication4
 {
@@ -27,11 +27,13 @@ namespace WebApplication4
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<testdbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ConnectionDb")));
+            services.AddDbContext<mydatabaseDB>(o =>
+            o.UseSqlServer(Configuration.GetConnectionString("mydatabaseConnection"))
+            );
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
-            
-            services.AddScoped<IUsuarios, UsuarioService>();
+
+            services.AddTransient<IUsuarios, UsuarioService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
