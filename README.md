@@ -55,3 +55,105 @@ Tambien podemos personalizar los mensajes de error con:
 ```sh
 [Required(ErrorMessage="Mensaje Personalizado")]
 ```
+
+
+## Manejo de datos no encontrados (Error 404 - Not Found)
+
+- Retornar el método NotFound en el controlador
+- Visualizar el error con el siguiente codigo en el startup
+
+```sh
+   app.UseStatusCodePages();
+```
+
+- Podemos mejorar la visualizacion del error, atravez de una vista propia, actualizar en el startup
+
+```sh
+app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
+```
+
+Agregar en el controlador de home
+
+```sh
+[Route("/Home/HandleError/{code:int}")]
+public IActionResult HandleError(int code)
+{
+   ViewData["ErrorMessage"] = $"Ocurrio un error, el codigo de error es: {code}";
+   return View("~/Views/Shared/HandleError.cshtml");
+}
+```
+
+
+## Sesiones de usuario
+
+
+El manejo de sesiones es importante cuando queremos crear inicios de sesion  en nuestra aplicacion, lo primero es habilitarlas en el startup
+
+En la configuracion de los servicios agregar
+```sh
+services.AddSession();
+```
+
+En la configuracion agregar y/o reemplazar
+```sh
+app.UseSession();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Login}/{action=Login}/{id?}");
+            });
+```
+
+Posterior agregar el controlador de login con las acciones de login y logout
+
+Al momento de realizar el proceso de login, será necesario validar que el usuario enviado exista y posterior almacenarlo en la session
+
+```sh
+
+            if (usuarioExist)
+            {
+                HttpContext.Session.SetString(VariabledeSesion, NombreUsuario);
+                return RedirectToAction("Index", "Home");
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Datos ingresado no válido.");
+            }
+
+            return View(u);
+```
+
+
+La accion de logout debe limpiar la sesion
+
+```sh
+    HttpContext.Session.Clear();
+```
+
+- Agregar la vista para el login, basandose en [Formulario de Inicio de Sesión básico](https://jsfiddle.net/StartBootstrap/efvg9j7a/)
+- Editar el layout principal con un form en el header para poder realizar logout
+
+```sh
+   @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">
+                                Sign out(@usuarioActual)
+                            </a>
+                            }
+
+```
+
+
+Podremos obtener en la vista el usuario de la sesion de la siguiente manera
+
+```sh
+@using Microsoft.AspNetCore.Http
+
+@{
+    var usuarioActual = Context.Session.GetString("VariableSesion");
+
+}
+```

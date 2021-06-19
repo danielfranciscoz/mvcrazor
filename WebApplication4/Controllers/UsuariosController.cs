@@ -35,6 +35,11 @@ namespace WebApplication4.Controllers
         public ActionResult Detalle(int id)
         {
             Usuario u = ObtenerUsuario(id); //ObtenerUsuario(id);
+
+            if ( u == null)
+            {
+                return NotFound();
+            }
             return View(u);
         }
 
@@ -137,6 +142,13 @@ namespace WebApplication4.Controllers
 
         }
 
-      
+        [Route("/Home/HandleError/{code:int}")]
+        public IActionResult HandleError(int code)
+        {
+            ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
+            return View("~/Views/Shared/HandleError.cshtml");
+        }
+
+
     }
 }
