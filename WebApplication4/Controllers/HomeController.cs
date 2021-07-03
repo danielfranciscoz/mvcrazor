@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication4.Controllers
 {
@@ -18,8 +20,14 @@ namespace WebApplication4.Controllers
             _logger = logger;
         }
 
+
         public IActionResult Index()
         {
+            
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("_User")))
+            {
+                return RedirectToAction("Login","Login");
+            }
             return View();
         }
 

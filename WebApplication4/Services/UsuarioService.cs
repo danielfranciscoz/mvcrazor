@@ -22,7 +22,7 @@ namespace WebApplication4.Services
 
         public List<Usuario> GetUsuarios()
         {
-            return _db.Usuario.ToList();
+            return _db.Usuarios.ToList();
         }
 
         public void GuardarUsuario()

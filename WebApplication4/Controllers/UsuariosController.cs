@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication4.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApplication4.Controllers
 {
@@ -13,21 +14,24 @@ namespace WebApplication4.Controllers
     {
         mydatabaseDB _db;
         List<Usuario> usuarios;
+        SelectList s;
 
         public UsuariosController(mydatabaseDB db)
         {
             _db = db;
+            var roles = _db.Roles.Where(w => w.Eliminado == false);
+            s = new SelectList(roles, "Id", "Nombre");
         }
 
         // GET: UsuariosController
         public ActionResult Index()
         {
-            usuarios = _db.Usuario.ToList();
+            usuarios = _db.Usuarios.ToList();
             int cantidad = usuarios.Count();
-            
+
             ViewBag.cantidad = cantidad;
             ViewData["cantidadVD"] = cantidad;
-            
+
             return View(usuarios);
         }
 
@@ -36,7 +40,7 @@ namespace WebApplication4.Controllers
         {
             Usuario u = ObtenerUsuario(id); //ObtenerUsuario(id);
 
-            if ( u == null)
+            if (u == null)
             {
                 return NotFound();
             }
@@ -46,6 +50,8 @@ namespace WebApplication4.Controllers
         // GET: UsuariosController/Create
         public ActionResult Crear()
         {
+            ViewBag.Roles = s;
+
             return View();
         }
 
@@ -56,24 +62,34 @@ namespace WebApplication4.Controllers
         {
             try
             {
-                //user.Id = calcularId();
-                Usuario u = new Usuario()
+                if (ModelState.IsValid)
                 {
-                    Nombre = user.Nombre,
-                    Correo = user.Correo,
-                    Usuario1 = user.Usuario1
-                };
-                
-                _db.Usuario.Add(u);
+                    Usuario u = new Usuario()
+                    {
+                        Nombre = user.Nombre,
+                        Correo = user.Correo,
+                        Usuario1 = user.Usuario1,
+                        IdRol = user.IdRol
+                    };
 
-                _db.SaveChanges();
+                    _db.Usuarios.Add(u);
 
-               // usuarios.Add(user);
-                return RedirectToAction(nameof(Index));
+                    _db.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Roles = s;
+                    return View();
+                }
+
+
+                // usuarios.Add(user);
             }
             catch
             {
-                return View();
+                TempData["Error"] = "Ocurrio un error al tratar de guardar";
+                return RedirectToAction(nameof(Crear));
             }
         }
 
@@ -85,6 +101,7 @@ namespace WebApplication4.Controllers
         // GET: UsuariosController/Edit/5
         public ActionResult Editar(int id)
         {
+            ViewBag.Roles = s;
             Usuario u = ObtenerUsuario(id);
 
             return View(u);
@@ -92,8 +109,8 @@ namespace WebApplication4.Controllers
 
         private Usuario ObtenerUsuario(int id)
         {
-            return _db.Usuario.Find(id);
-           // return usuarios.FirstOrDefault(f => f.Id == id);
+            return _db.Usuarios.Find(id);
+            // return usuarios.FirstOrDefault(f => f.Id == id);
         }
 
         // POST: UsuariosController/Edit/5

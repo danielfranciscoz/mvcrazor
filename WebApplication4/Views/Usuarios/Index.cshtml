@@ -29,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (Usuario item in Model) {
+        @foreach (Usuario item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(a => item.Id)
@@ -46,7 +46,8 @@
             <td>
                 <a asp-action="Editar" asp-route-id="@item.Id">Editar</a> |
                 <a asp-action="Detalle" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                @*<a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>*@
+                <a href="javascript:void(0)" id="@item.Id" class="delete-prompt">Delete</a>
             </td>
         </tr>
 }
@@ -54,3 +55,58 @@
 </table>
 
 <h6>Existen @ViewData["cantidadVD"] elementos (ViewData)</h6>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Realmente desea eliminar el registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary delete-confirm">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script>
+    $(document).ready(function () {
+        var pryEmpId;
+        $('.delete-prompt').click(function () {
+            pryEmpId = $(this).attr('id');
+            $('#myModal').modal('show');
+        });
+
+        $('.delete-confirm').click(function () {
+            if (pryEmpId != '') {
+                $.ajax({
+                    url: '/Usuarios/Delete',
+                    data: { 'id': pryEmpId },
+                    type: 'get',
+                    success: function (data) {
+                        if (data) {
+                            location.reload();
+                        }
+                    }, error: function (err) {
+                        if (!$('.modal-header').hasClass('alert-danger')) {
+                            $('.modal-header').removeClass('alert-success').addClass('alert-danger');
+                            $('.delete-confirm').css('display', 'none');
+                        }
+                        $('.success-message').html(err.statusText);
+                    }
+                });
+            }
+        });
+    });
+</script>
+}

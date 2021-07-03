@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+#nullable disable
 
 namespace WebApplication4.Models
 {
@@ -13,5 +11,8 @@ namespace WebApplication4.Models
         public string Usuario1 { get; set; }
         public string Nombre { get; set; }
         public string Correo { get; set; }
+        public int? IdRol { get; set; }
+
+        public virtual Role IdRolNavigation { get; set; }
     }
 }
