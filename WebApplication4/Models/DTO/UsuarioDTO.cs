@@ -9,20 +9,35 @@ using WebApplication4.Util;
 
 namespace WebApplication4.Models
 {
-    public partial class UsuarioDTO
+    public abstract class UsuarioAbstract
+    {
+        [Required(ErrorMessage = "El campo es requerido")]
+        public string Usuario1 { get; set; }
+
+    }
+
+    public class UsuarioDTO : UsuarioAbstract
+    {
+        [Required(ErrorMessage = "El campo es requerido")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo es requerido")]
+        [EmailAddress(ErrorMessage = "El dato ingresado no es un correo válido")]
+        public string Correo { get; set; }
+
+        [NotAllowedId]
+        public int? IdRol { get; set; }
+    }
+
+    public class UsuarioRead : UsuarioDTO
     {
         public int Id { get; set; }
+        public string NombreRol { get; set; }
+    }
 
-        [Required(ErrorMessage = "El campo usuario es requerido para poder continuar")]
-        [MaxLength(50)]
-        [MinLength(20)]
-        public string Usuario1 { get; set; }
-        [Required]
-        public string Nombre { get; set; }
-        [EmailAddress]
-        [Required]
-        public string Correo { get; set; }
-        [RequiredInt(ErrorMessage ="El rol prohibido no puede ser seleccionado")]
-        public int IdRol { get; set; }
+    public class UsuarioLogin : UsuarioAbstract
+    {
+        [Required(ErrorMessage = "El campo es requerido")]
+        public string password { get; set; }
     }
 }

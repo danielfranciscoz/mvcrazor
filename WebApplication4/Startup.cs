@@ -33,7 +33,8 @@ namespace WebApplication4
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            services.AddTransient<IUsuarios, UsuarioService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IRolesService, RolesService>();
 
             services.AddSession();
         }
@@ -65,7 +66,7 @@ namespace WebApplication4
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Login}/{id?}");
+                    pattern: "{controller=Login}/{action=Index}/{id?}");
             });
         }
     }

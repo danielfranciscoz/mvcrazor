@@ -23,11 +23,6 @@ namespace WebApplication4.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=myDataBase;Integrated Security=True;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +33,7 @@ namespace WebApplication4.Database
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.NombreRol)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -67,7 +62,7 @@ namespace WebApplication4.Database
                 entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.Usuarios)
                     .HasForeignKey(d => d.IdRol)
-                    .HasConstraintName("FK__Usuario__IdRol__37A5467C");
+                    .HasConstraintName("FK__Usuario__IdRol__3D5E1FD2");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -5,6 +5,7 @@
     [Nombre] VARCHAR(50) NOT NULL, 
     [Correo] VARCHAR(50) NOT NULL, 
     [IdRol] INT NULL,
+    [Activo] BIT NOT NULL, 
 
-   FOREIGN KEY (IdRol) REFERENCES Roles(Id)
+    FOREIGN KEY (IdRol) REFERENCES Roles(Id)
 )

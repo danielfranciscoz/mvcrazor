@@ -12,6 +12,7 @@ namespace WebApplication4.Models
         public string Nombre { get; set; }
         public string Correo { get; set; }
         public int? IdRol { get; set; }
+        public bool Activo { get; set; }
 
         public virtual Role IdRolNavigation { get; set; }
     }

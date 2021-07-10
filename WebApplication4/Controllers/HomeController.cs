@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace WebApplication4.Controllers
 {
@@ -24,9 +25,9 @@ namespace WebApplication4.Controllers
         public IActionResult Index()
         {
             
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("_User")))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("_User")))
             {
-                return RedirectToAction("Login","Login");
+                return RedirectToAction("Index","Login");
             }
             return View();
         }
@@ -40,6 +41,19 @@ namespace WebApplication4.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Route("/Home/HandleError/{code:int}")]
+        public IActionResult ErrorControlado(int code)
+        {
+            if (HttpStatusCode.NotFound.ToString().Equals(code))
+            {
+                ViewData["ErrorMessage"] = $"Lo sentimos, el registro que busca no existe";
+                return View("~/Views/Shared/404.cshtml");
+
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

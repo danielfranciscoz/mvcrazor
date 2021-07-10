@@ -1,84 +1,59 @@
-﻿ @model Usuario
-@{
-    var title = "Acceso al Sistema";
-    ViewData["Title"] = title;
-    Layout = null;
+﻿@{
+    Layout = "";
 }
+@model WebApplication4.Models.UsuarioLogin
+
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-
-    <title>@title</title>
-
-    <link href="/lib/bootstrap-4.3.1/dist/css/bootstrap.css" rel="stylesheet" />
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
-
-    <style>
-        .form-signin {
-            margin: 0 auto;
-            max-width: 330px;
-            padding: 15px;
-        }
-
-        .form-signin h4 {
-            text-align: center;
-        }
-    </style>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Session2</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <h3>LOGIN MVC ASP.Net Core 3.1</h3>
 
-        </div>
+    <div class="container-fluid">
+        <div class="row no-gutter">
+            <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+            <div class="col-md-8 col-lg-6">
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9 col-lg-8 mx-auto">
+                                <h3 class="login-heading mb-4">Bienvenido al sistema</h3>
+                                <form asp-action="Login">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-label-group">
+                                        <input asp-for="Usuario1" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+                                        <label asp-for="Usuario1" for="inputEmail">Usuario</label>
+                                    </div>
 
-    </div>
+                                    <div class="form-label-group">
+                                        <input asp-for="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                        <label asp-for="password" for="inputPassword">Contraseña</label>
+                                    </div>
 
-    <div class="container body-content">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col">
-                    @*<div class="form-group">
-                        <label asp-for="Id" class="control-label"></label>
-                        <input asp-for="Id" class="form-control" />
-                        <span asp-validation-for="Id" class="text-danger"></span>
-                    </div>*@
-
-                    <div class="form-group">
-                        <label asp-for="Usuario1" class="control-label"></label>
-                        <input asp-for="Usuario1" class="form-control" />
-                        <span asp-validation-for="Usuario1" class="text-danger"></span>
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                        <label class="custom-control-label" for="customCheck1">Recordar contraseña</label>
+                                    </div>
+                                    <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Iniciar sesiòn</button>
+                                    <div class="text-center">
+                                        <a class="small" href="#">Recuperar contraseña?</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label asp-for="Nombre" class="control-label"></label>
-                        <input asp-for="Nombre" class="form-control" />
-                        <span asp-validation-for="Nombre" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Correo" class="control-label"></label>
-                        <input asp-for="Correo" class="form-control" />
-                        <span asp-validation-for="Correo" class="text-danger"></span>
-                    </div>
-
-                </div>
-            </div>s
-
-
-            <div class="form-group">
-                <input type="submit" value="Crear usuario" class="btn btn-primary" />
             </div>
-        </form>
-
+        </div>
     </div>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
-
 </html>

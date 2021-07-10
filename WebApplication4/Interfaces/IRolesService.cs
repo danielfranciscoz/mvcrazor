@@ -6,10 +6,8 @@ using WebApplication4.Models;
 
 namespace WebApplication4.Interfaces
 {
-    public interface IUsuarios
+    public interface IRolesService
     {
-        List<Usuario> GetUsuarios();
-        void GuardarUsuario();
-        void EditarUsuario(int idUsuario, UsuarioDTO usuario);
+        List<Role> ObtenerRoles();
     }
 }

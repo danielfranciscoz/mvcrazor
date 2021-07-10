@@ -8,26 +8,82 @@ using WebApplication4.Models;
 
 namespace WebApplication4.Services
 {
-    public class UsuarioService : IUsuarios
+    public class UsuarioService : IUsuarioService
     {
         mydatabaseDB _db;
+
         public UsuarioService(mydatabaseDB db)
         {
             _db = db;
         }
-        public void EditarUsuario(int idUsuario, UsuarioDTO usuario)
+        public bool EditarUsuario(int id, UsuarioDTO user)
         {
-            throw new NotImplementedException();
+            Usuario u = ObtenerUsuarioPorId(id);// ObtenerUsuario(id);
+
+            u.Nombre = user.Nombre;
+            u.Correo = user.Correo;
+            u.Usuario1 = user.Usuario1;
+            u.IdRol = user.IdRol;
+
+            _db.Update(u);
+            _db.SaveChanges();
+
+            return true;
         }
 
-        public List<Usuario> GetUsuarios()
+        public bool EliminarUsuario(int id)
         {
-            return _db.Usuarios.ToList();
+            Usuario u = ObtenerUsuarioPorId(id);
+            u.Activo = false;
+
+            _db.Update(u);
+
+            _db.SaveChanges();
+
+            return true;
         }
 
-        public void GuardarUsuario()
+        public int GuardarUsuario(UsuarioDTO user)
         {
-            throw new NotImplementedException();
+            Usuario u = new Usuario()
+            {
+                Correo = user.Correo,
+                Nombre = user.Nombre,
+                Usuario1 = user.Usuario1,
+                IdRol = user.IdRol,
+                Activo = true
+            };
+
+            _db.Usuarios.Add(u);
+            _db.SaveChanges();
+
+            return u.Id;
+        }
+
+        public Usuario ObtenerUsuarioPorId(int id)
+        {
+            return _db.Usuarios.Find(id);
+        }
+
+        public Usuario ObtenerUsuarioPorNombre(string userName)
+        {
+            return _db.Usuarios.FirstOrDefault(f => f.Usuario1 == userName);
+        }
+
+        public List<UsuarioRead> ObtenerUsuarios()
+        {
+            return _db.Usuarios
+        .Where(usuario => usuario.Activo == true)
+        .Select(s => new UsuarioRead()
+        {
+            Id = s.Id,
+            Correo = s.Correo,
+            IdRol = s.IdRol.Value,
+            Usuario1 = s.Usuario1,
+            Nombre = s.Nombre,
+          //  NombreRol = s.IdRolNavigation.NombreRol
+        })
+        .ToList();
         }
     }
 }

@@ -7,26 +7,42 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication4.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using WebApplication4.Interfaces;
 
 namespace WebApplication4.Controllers
 {
     public class UsuariosController : Controller
     {
-        mydatabaseDB _db;
-        List<Usuario> usuarios;
-        SelectList s;
-
-        public UsuariosController(mydatabaseDB db)
+        List<UsuarioRead> usuarios;
+        IUsuarioService _usuarioService;
+        IRolesService _rolesService;
+        SelectList lista;
+        public UsuariosController(
+            IUsuarioService usuarioService,
+            IRolesService rolesService
+            )
         {
-            _db = db;
-            var roles = _db.Roles.Where(w => w.Eliminado == false);
-            s = new SelectList(roles, "Id", "Nombre");
+            _usuarioService = usuarioService;
+            _rolesService = rolesService;
+
+            CargarRoles();
         }
 
+        private void CargarRoles()
+        {
+            var roles = _rolesService.ObtenerRoles();
+            lista = new SelectList(roles, "Id", "NombreRol");
+        }
         // GET: UsuariosController
         public ActionResult Index()
         {
-            usuarios = _db.Usuarios.ToList();
+            //if (string.IsNullOrEmpty(HttpContext.Session.GetString("usuario")))
+            //{
+            //    return RedirectToAction("Index", "Login");
+            //}
+
+            usuarios = _usuarioService.ObtenerUsuarios();
+
             int cantidad = usuarios.Count();
 
             ViewBag.cantidad = cantidad;
@@ -38,7 +54,7 @@ namespace WebApplication4.Controllers
         // GET: UsuariosController/Details/5
         public ActionResult Detalle(int id)
         {
-            Usuario u = ObtenerUsuario(id); //ObtenerUsuario(id);
+            Usuario u = _usuarioService.ObtenerUsuarioPorId(id); //ObtenerUsuario(id);
 
             if (u == null)
             {
@@ -50,7 +66,8 @@ namespace WebApplication4.Controllers
         // GET: UsuariosController/Create
         public ActionResult Crear()
         {
-            ViewBag.Roles = s;
+
+            ViewBag.Roles = lista;
 
             return View();
         }
@@ -64,53 +81,43 @@ namespace WebApplication4.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Usuario u = new Usuario()
-                    {
-                        Nombre = user.Nombre,
-                        Correo = user.Correo,
-                        Usuario1 = user.Usuario1,
-                        IdRol = user.IdRol
-                    };
-
-                    _db.Usuarios.Add(u);
-
-                    _db.SaveChanges();
+                    _usuarioService.GuardarUsuario(user);
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ViewBag.Roles = s;
+
+                    ViewBag.Roles = lista;
                     return View();
                 }
-
-
-                // usuarios.Add(user);
             }
             catch
             {
-                TempData["Error"] = "Ocurrio un error al tratar de guardar";
-                return RedirectToAction(nameof(Crear));
+                return View();
             }
-        }
-
-        private int calcularId()
-        {
-            return usuarios.Max(m => m.Id) + 1;
         }
 
         // GET: UsuariosController/Edit/5
         public ActionResult Editar(int id)
         {
-            ViewBag.Roles = s;
-            Usuario u = ObtenerUsuario(id);
+            Usuario u = _usuarioService.ObtenerUsuarioPorId(id);
 
-            return View(u);
-        }
+            if (u == null)
+            {
+                return NotFound();
+            }
 
-        private Usuario ObtenerUsuario(int id)
-        {
-            return _db.Usuarios.Find(id);
-            // return usuarios.FirstOrDefault(f => f.Id == id);
+            UsuarioDTO user = new UsuarioDTO()
+            {
+                Nombre = u.Nombre,
+                Correo = u.Correo,
+                Usuario1 = u.Usuario1,
+                IdRol = u.IdRol
+            };
+
+            ViewBag.Roles = lista;
+
+            return View(user);
         }
 
         // POST: UsuariosController/Edit/5
@@ -120,16 +127,19 @@ namespace WebApplication4.Controllers
         {
             try
             {
-                Usuario u = ObtenerUsuario(id);// ObtenerUsuario(id);
+                if (ModelState.IsValid)
+                {
+                    _usuarioService.EditarUsuario(id, user);
+                    return RedirectToAction(nameof(Index));
 
-                u.Nombre = user.Nombre;
-                u.Correo = user.Correo;
-                u.Usuario1 = user.Usuario1;
+                }
+                else
+                {
+                    ViewBag.Roles = lista;
+                    return View();
+                }
 
-                _db.Update(u);
-                _db.SaveChanges();
 
-                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -142,12 +152,7 @@ namespace WebApplication4.Controllers
         {
             try
             {
-                Usuario u = ObtenerUsuario(id);// ObtenerUsuario(id);
-
-                _db.Remove(u);
-                _db.SaveChanges();
-
-                //      usuarios.Remove(u);
+                _usuarioService.EliminarUsuario(id);
 
                 return RedirectToAction(nameof(Index));
                 //return RedirectToAction("Index");
@@ -157,13 +162,6 @@ namespace WebApplication4.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-        }
-
-        [Route("/Home/HandleError/{code:int}")]
-        public IActionResult HandleError(int code)
-        {
-            ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
-            return View("~/Views/Shared/HandleError.cshtml");
         }
 
 
